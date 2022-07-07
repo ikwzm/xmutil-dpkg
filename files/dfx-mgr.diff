@@ -1,0 +1,12 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 6e7fe2d..215dd22 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -48,3 +48,7 @@ add_subdirectory (example)
+ #if (WITH_EXAMPLE)
+ #endif (WITH_EXAMPLE)
+ # vim: expandtab:ts=2:sw=2:smartindent
++
++SET(CPACK_PACKAGE_CONTACT "ichiro_k@ca2.so-net.ne.jp")
++SET(CPACK_DEBIAN_PACKAGE_MAINTAINER "ikwzm <ichiro_k@ca2.so-net.ne.jp>")
++include(CPack)
