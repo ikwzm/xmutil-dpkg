@@ -19,6 +19,7 @@ shell$ git commit -m "[add] script files for build debian package"
 
 ```console
 shell$ mkdir build
+shell$ cd build
 shell$ cmake -DCMAKE_TOOLCHAIN_FILE="../cmake/toolchain.cmake" ..
 shell$ cpack -G DEB -C CPackConfig.cmake
 shell$ cp libdfx*.deb ../..
