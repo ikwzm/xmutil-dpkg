@@ -1,0 +1,109 @@
+diff --git a/ChangeLog b/ChangeLog
+new file mode 100644
+index 0000000..e69de29
+diff --git a/Makefile b/Makefile
+index 218b396..ce0a469 100644
+--- a/Makefile
++++ b/Makefile
+@@ -3,8 +3,9 @@
+ # Copyright (c) 2021 Xilinx, Inc.
+ #
+ 
+-CROSS_COMPILE ?= aarch64-linux-gnu-
+-CC ?= $(CROSS_COMPILE)gcc
++CC := $(CROSS_COMPILE)gcc
++INSTALL_PROGRAM ?= install
++bindir ?= /usr/bin
+ EXEC := image_update
+ c_SOURCES := $(wildcard *.c)
+ INCLUDES := $(wildcard *.h)
+@@ -15,5 +16,8 @@ all: $(EXEC)
+ $(EXEC): $(c_SOURCES)
+ 	$(CC) $< -o $@
+ 
++install: $(EXEC)
++	$(INSTALL_PROGRAM) -D -m 755 $(EXEC) $(DESTDIR)$(bindir)/$(EXEC)
++
+ clean:
+ 	rm -rf $(OBJS) image_update
+diff --git a/debian/changelog b/debian/changelog
+new file mode 100644
+index 0000000..d92e291
+--- /dev/null
++++ b/debian/changelog
+@@ -0,0 +1,6 @@
++zynqmp-image-update (2022.1.2) unstable; urgency=low
++
++  * initial release
++
++ -- ikwzm <ichiro_k@ca2.so-net.ne.jp>  Tue, 5 Jul 2022 14:20:00 +0900
++
+diff --git a/debian/control b/debian/control
+new file mode 100644
+index 0000000..488db2b
+--- /dev/null
++++ b/debian/control
+@@ -0,0 +1,10 @@
++Source: zynqmp-image-update
++Maintainer: ikwzm <ichiro_k@ca2.so-net.ne.jp>
++Build-Depends: debhelper (>= 9)
++Standards-Version: 3.9.6
++
++Package: zynqmp-image-update
++Architecture: any
++Depends: ${misc:Depends}
++Description: This is a user space application that updates the alternate image on QSPI while linux is running from the current running image. This would help users to upgrade Boot Firmware in Qspi from remote locations.
++
+diff --git a/debian/rules b/debian/rules
+new file mode 100755
+index 0000000..a4f368d
+--- /dev/null
++++ b/debian/rules
+@@ -0,0 +1,47 @@
++#!/usr/bin/make -f
++
++package  := zynqmp-image-update
++
++arch      ?= $(shell uname -m | sed -e s/arm.*/arm/ -e s/aarch64.*/arm64/)
++host_arch ?= $(shell uname -m | sed -e s/arm.*/arm/ -e s/aarch64.*/arm64/)
++deb_arch  ?= $(shell dpkg --print-architecture)
++
++destdir = debian/tmp/
++bindir  = $(destdir)/usr/bin
++docdir  = $(destdir)/usr/share/doc/$(package)
++
++ifeq ($(arch), arm)
++ ifneq ($(host_arch), arm)
++   CROSS_COMPILE  ?= arm-linux-gnueabihf-
++ endif
++endif
++ifeq ($(arch), arm64)
++ ifneq ($(host_arch), arm64)
++   CROSS_COMPILE  ?= aarch64-linux-gnu-
++ endif
++endif
++
++clean:
++	rm -f build
++	rm -rf debian/tmp debian/*~ debian/files* debian/substvars
++
++build:
++	rm -rf debian/tmp
++	$(MAKE) all
++	touch build
++
++binary-arch: build
++	install -d debian/tmp/DEBIAN $(docdir) $(bindir)
++	$(MAKE) CROSS_COMPILE=$(CROSS_COMPILE) DESTDIR=$(destdir) install
++	cp -a LICENSES/MIT           $(docdir)/
++	cp -a debian/changelog       $(docdir)/changelog.Debian
++	cp -a ChangeLog              $(docdir)/changelog
++	dpkg-gencontrol -DArchitecture=$(deb_arch)
++	chown -R root:root debian/tmp
++	chmod -$ u+w,go=rX debian/tmp
++	dpkg-deb --build debian/tmp ..
++
++binary-indep: build
++
++binary: binary-indep binary-arch
++
