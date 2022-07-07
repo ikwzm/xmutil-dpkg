@@ -1,5 +1,15 @@
 ### libdfx
 
+#### Required Packages
+
+ * linux-libc-dev
+
+##### Install
+
+```
+shell$ sudo apt install linux-libc-dev-arm64-cross
+```
+
 #### Download
 
 ```console
