@@ -10,3 +10,4 @@ xmutil-dpkg - xmutil debian packages
 * [xlnx-platformstats_2022.1.2_arm64.deb](docs/build/xlnx-platformstats.md)
 * [ddr-qos-1.0-1.arm64.deb](docs/build/ddr-qos.md)
 * [axi-qos-1.0-1.arm64.deb](docs/build/axi-qos.md)
+* [xmutil_2022.1.2_all.deb](docs/build/xmutil.md)
