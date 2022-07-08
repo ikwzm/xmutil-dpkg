@@ -7,7 +7,4 @@ xmutil-dpkg - xmutil debian packages
 * [zynqmp-image-update_2022.1.2_arm64.deb](docs/build/zynqmp-image-update.md)
 * [libdfx-0.1.1-Linux.deb](docs/build/libdfx.md)
 * [dfx-mgr-0.1.1-Linux.deb](docs/build/dfx-mgr.md)
-
-
-
-
+* [xlnx-platformstats_2022.1.2_arm64.deb](docs/build/xlnx-platformstats.md)

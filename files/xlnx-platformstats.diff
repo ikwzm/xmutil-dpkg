@@ -1,0 +1,107 @@
+diff --git a/ChangeLog b/ChangeLog
+new file mode 100644
+index 0000000..e69de29
+diff --git a/app/Makefile b/app/Makefile
+index 468713e..27a5fc3 100644
+--- a/app/Makefile
++++ b/app/Makefile
+@@ -1,6 +1,6 @@
+ .PHONY:	clean all build install
+ 
+-CC ?=  gcc
++CC := $(CROSS_COMPILE)gcc
+ INSTALL_PROGRAM ?= install
+ CFLAGS ?= -Wall -Wextra
+ LDFLAGS ?= 
+diff --git a/debian/changelog b/debian/changelog
+new file mode 100644
+index 0000000..debc648
+--- /dev/null
++++ b/debian/changelog
+@@ -0,0 +1,6 @@
++xlnx-platformstats (2022.1.2) unstable; urgency=low
++
++  * initial release
++
++ -- ikwzm <ichiro_k@ca2.so-net.ne.jp>  Fri, 8 Jul 2022 14:30:00 +0900
++
+diff --git a/debian/control b/debian/control
+new file mode 100644
+index 0000000..0e760c8
+--- /dev/null
++++ b/debian/control
+@@ -0,0 +1,9 @@
++Source: xlnx-platformstats
++Maintainer: ikwzm <ichiro_k@ca2.so-net.ne.jp>
++Build-Depends: debhelper (>= 9)
++Standards-Version: 3.9.6
++
++Package: xlnx-platformstats
++Architecture: all
++Description: Xilinx Platform Stats Utility
++
+diff --git a/debian/rules b/debian/rules
+new file mode 100755
+index 0000000..5ad1c2e
+--- /dev/null
++++ b/debian/rules
+@@ -0,0 +1,47 @@
++#!/usr/bin/make -f
++
++package   := xlnx-platformstats
++
++arch      ?= $(shell uname -m | sed -e s/arm.*/arm/ -e s/aarch64.*/arm64/)
++host_arch ?= $(shell uname -m | sed -e s/arm.*/arm/ -e s/aarch64.*/arm64/)
++deb_arch  ?= $(shell dpkg --print-architecture)
++
++destdir = debian/tmp/
++bindir  = $(destdir)/usr/bin
++docdir  = $(destdir)/usr/share/doc/$(package)
++
++ifeq ($(arch), arm)
++ ifneq ($(host_arch), arm)
++   CROSS_COMPILE  ?= arm-linux-gnueabihf-
++ endif
++endif
++ifeq ($(arch), arm64)
++ ifneq ($(host_arch), arm64)
++   CROSS_COMPILE  ?= aarch64-linux-gnu-
++ endif
++endif
++
++clean:
++	rm -f build
++	rm -rf debian/tmp debian/*~ debian/files* debian/substvars
++
++build:
++	rm -rf debian/tmp
++	touch build
++
++binary-arch: build
++	install -d $(destdir)/DEBIAN $(docdir) $(bindir)
++	$(MAKE) -C ./src CROSS_COMPILE=$(CROSS_COMPILE) DESTDIR=$(CURDIR)/$(destdir) install
++	$(MAKE) -C ./app CROSS_COMPILE=$(CROSS_COMPILE) DESTDIR=$(CURDIR)/$(destdir) install
++	cp -a LICENSE                $(docdir)/copyright
++	cp -a debian/changelog       $(docdir)/changelog.Debian
++	cp -a ChangeLog              $(docdir)/changelog
++	dpkg-gencontrol -DArchitecture=$(deb_arch)
++	chown -R root:root debian/tmp
++	chmod -$ u+w,go=rX debian/tmp
++	dpkg-deb --build debian/tmp ..
++
++binary-indep: build
++
++binary: binary-indep binary-arch
++
+diff --git a/src/Makefile b/src/Makefile
+index 67683a4..1c012d6 100644
+--- a/src/Makefile
++++ b/src/Makefile
+@@ -1,6 +1,6 @@
+ .PHONY:	clean
+ 
+-CC ?=  gcc
++CC := $(CROSS_COMPILE)gcc
+ CP = cp
+ INSTALL_PROGRAM ?= install
+ CFLAGS 	+= -Wall
