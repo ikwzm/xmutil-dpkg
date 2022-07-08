@@ -3,7 +3,7 @@
 #### Download
 
 ```console
-shell$ git clone https://github.com/ikwzm/fru-print
+shell$ git clone --branch=v1.0.0 --depth=1 https://github.com/ikwzm/fru-print
 Cloning into 'fru-print'...
 remote: Enumerating objects: 20, done.        
 remote: Counting objects: 100% (20/20), done.        
