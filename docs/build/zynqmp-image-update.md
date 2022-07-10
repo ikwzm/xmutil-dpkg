@@ -1,15 +1,15 @@
-### image_update
+### zynqmp-image-update
 
 #### Download
 
 ```console
-shell$ git clone --branch xilinx_v2022.1_update2 https://github.com/Xilinx/linux-image_update
+shell$ git clone --branch xilinx_v2022.1_update2 https://github.com/Xilinx/linux-image_update zynqmp-image-update
 ```
 
 #### Patch for build Debian Package
 
 ```console
-shell$ cd linux-image_update
+shell$ cd zynqmp-image-update
 shell$ git checkout -b xilinx_v2022.1_update2_builddeb
 shell$ patch -p1 < ../files/zynqmp-image-update-builddeb.patch
 shell$ git add --all
