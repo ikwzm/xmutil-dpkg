@@ -10,9 +10,11 @@ shell$ git clone --branch xilinx_v2022.1_update2 https://github.com/Xilinx/xmuti
 
 ```console
 shell$ cd xmutil
-shell$ patch -p1 < ../files/xmutil.diff
+shell$ git checkout -b xilinx_v2022.1_update2-builddeb
+shell$ patch -p1 < ../files/xmutil-builddeb.patch
 shell$ git add --all
 shell$ git commit -m "[add] script files for build debian package"
+shell$ git tag -a xilinx_v2022.1_update2-dpkg -m "Release xilinx_v2022.1_update2-dpkg"
 ```
 
 #### Build Debian Package
