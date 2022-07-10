@@ -95,7 +95,7 @@ index 0000000..a4f368d
 +binary-arch: build
 +	install -d debian/tmp/DEBIAN $(docdir) $(bindir)
 +	$(MAKE) CROSS_COMPILE=$(CROSS_COMPILE) DESTDIR=$(destdir) install
-+	cp -a LICENSES/MIT           $(docdir)/
++	cp -a LICENSES/MIT           $(docdir)/copyright
 +	cp -a debian/changelog       $(docdir)/changelog.Debian
 +	cp -a ChangeLog              $(docdir)/changelog
 +	dpkg-gencontrol -DArchitecture=$(deb_arch)
