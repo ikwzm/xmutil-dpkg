@@ -10,9 +10,11 @@ shell$ git clone --branch xilinx_v2022.1_update2 https://github.com/Xilinx/linux
 
 ```console
 shell$ cd linux-image_update
-shell$ patch -p1 < ../files/zynqmp-image-update.diff
+shell$ git checkout -b xilinx_v2022.1_update2_builddeb
+shell$ patch -p1 < ../files/zynqmp-image-update-builddeb.patch
 shell$ git add --all
 shell$ git commit -m "[add] script files for build debian package"
+shell$ git tag -a xilinx_v2022.1_update2_dpkg -m "xilinx_v2022.1_update2_dpkg"
 ```
 
 #### Build
